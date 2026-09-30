@@ -1,0 +1,13 @@
+{
+  "kind": "methane",
+  "mode": "1D permutation-symmetric BO wavepacket; no radiation",
+  "collision_energy_temperature_equivalent_K": 1000.0,
+  "effective_mass_electron_masses": 7348.610589461126,
+  "time_end_au": 9119.129632058113,
+  "max_transient_probability_R_below_1p35A": 0.13551276789707772,
+  "final_probability_R_below_1p35A": 2.510314431546166e-06,
+  "final_surviving_packet_norm": 0.9052329656826166,
+  "stable_product_probability": null,
+  "reason_stable_product_not_computed": "no photon continuum/radiative transition operator in this reduced model",
+  "movie": "results/methane_electron_cloud.mp4"
+}

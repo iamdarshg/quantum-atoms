@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 
 from .dirac import parse_formula, Z
 from .dirac import DiracGrid
-from .many_electron import ErrorBounds, MolecularDiracHartreeFock, max_separation_sphere
+from .many_electron import ErrorBounds, MolecularDiracHartree, max_separation_sphere
 
 
 def xyz_elements(path: Path, formula: str):
@@ -36,7 +36,7 @@ def simulate(formula: str, outdir: Path, steps=8, device="cuda", xyz: Path | Non
     elements=xyz_elements(xyz,formula) if xyz else [el for el,count in comp.items() for _ in range(count)]
     grid=DiracGrid((grid_size,)*3,spacing_bohr,device)
     errors=ErrorBounds(dt_au,norm_bound,overlap_bound,poisson_bound,spacing_bohr)
-    sim=MolecularDiracHartreeFock(elements,grid,errors,temperature_k,ramp_to_k,ramp_steps,radius_bohr=radius_bohr)
+    sim=MolecularDiracHartree(elements,grid,errors,temperature_k,ramp_to_k,ramp_steps,radius_bohr=radius_bohr)
     outdir.mkdir(parents=True,exist_ok=True)
     selected=sorted(set([0,steps//2,steps]))
     frames=[]

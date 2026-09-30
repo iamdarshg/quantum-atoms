@@ -4,3 +4,7 @@ __pycache__/
 .venv/
 build/
 dist/
+results/*.npz
+results/*.mp4
+results/*_frame.png
+results/*.stderr

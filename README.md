@@ -1,63 +1,36 @@
-# Molecular Dirac Simulation
+# quantum-atoms
 
-An experimental, GPU-default real-time **many-electron Dirac-Hartree-Fock (TD-DHF)** prototype. For a neutral input formula, it creates one occupied four-component spinor per electron, orthogonalizes the orbitals, computes direct and nonlocal exchange fields, and propagates electrons and classical nuclei together. Nuclei start at equal radius from `(0, 0, 0)` in a deterministic approximately maximin spherical arrangement. Reaction temperature sets nuclear Maxwell velocities; an optional ramp rescales nuclear kinetic temperature over a specified number of steps.
+Computational experiments for small-molecule electronic structure and reduced-dimensional reactive dynamics. This repository now includes an all-electron PySCF backend for HF, CCSD(T), and state-averaged CASSCF, fixed-geometry GIAO NMR calculations, symmetric HHO/CH4 association-path scans, and a one-coordinate quantum nuclear wavepacket whose time-dependent Born–Oppenheimer electron density can be exported as MP4.
 
-## Method and limits
+These components are **not** a full QED, full-dimensional reactive-scattering, or predictive radiative-association simulator. In particular, the wavepacket animation is the electronic one-particle density from a state-specific CASSCF 1-RDM, interpolated along a single symmetric association coordinate and averaged over the propagated nuclear packet. It does not calculate a full electron–nuclear wavefunction, spontaneous photon emission, product stabilization, reaction rates, or branching fractions. The earlier `formation_demo` remains a separate TD-DHF prototype and is not an accurate chemistry model.
 
-Each occupied spinor evolves under a time-dependent Dirac Hamiltonian in the nuclear field plus a direct electron Hartree field and nonlocal four-component Fock exchange. The exchange operation uses a fixed-point Cayley substep; occupied orbitals are re-orthogonalized after propagation. Hartree self-interaction is canceled by the matching diagonal Fock term in the orthonormal limit. The propagator uses symmetric split-step Fourier evolution and the exact free-particle Dirac exponential. Nuclear positions evolve under Ehrenfest Coulomb forces.
-
-This is **not fourth-order QED or a validated chemical-reaction predictor**. The model is TD-DHF: it includes mean-field exchange but omits electron correlation (MP2/MP3/MP4), radiative self-energy diagrams, vacuum polarization, quantized photons, and self-consistent Maxwell radiation. It also does not apply a no-pair projection or renormalize the negative-energy Dirac sea; the finite grid acts as a cutoff, not a physical vacuum treatment. No perturbative QED order is claimed. A complete fourth-order QED calculation needs a specified renormalized bound-state formulation, diagram set, and corresponding numerical implementation. Initial orbitals are localized Gaussian shell-like seeds, not converged eigenstates. Temperature is the classical nuclear kinetic temperature, not a thermal electronic ensemble. Bond formation is not guaranteed for a given temperature or short run.
-
-Reported tolerances are explicit numerical monitors, not certified physical error bars. Norm drift and orbital overlap are checked after each step; the Poisson residual monitors the spectral Coulomb solve. `dt-au`, grid spacing, grid size, and bounds are configurable. Check observable convergence by rerunning with smaller steps and finer grids.
-
-## Install and run
+## Install
 
 ```bash
-python -m pip install -e '.[test]'
-pytest
-python -m molecular_dirac_sim.formation_demo H2O --device cpu --steps 8 --out examples/h2o
-python -m molecular_dirac_sim.formation_demo CH4 --device cpu --steps 8 --out examples/ch4
+python -m pip install -e '.[science,test]'
 ```
 
-CUDA is the default. Install a PyTorch build compatible with your CUDA driver using the official PyTorch installation selector. Use `--device cpu` for CPU runs. CUDA execution could not be benchmarked in this environment.
-
-## GUI
-
-Install the GUI dependencies and launch the local interactive app:
+## Run electronic structure and NMR calculations
 
 ```bash
-python -m pip install -e '.[gui]'
-molecular-dirac-gui
+quantum-atoms species 'O(^3P)' H H
+quantum-atoms reference water --basis cc-pVTZ --method ccsd\(t\) --nmr --nmr-basis cc-pVDZ
+quantum-atoms reference methane --basis cc-pVTZ --method ccsd\(t\) --nmr --nmr-basis cc-pVDZ
 ```
 
-The GUI accepts a formula or a list of proton counts (one per atom), an independent total electron count, initial sphere radius, fixed or ramped nuclear temperature, CUDA/CPU backend, grid, time step, and monitored error bounds. It plots the nuclear positions and an electron-density slice after a run. CUDA is selected by default; choose CPU to test without an NVIDIA GPU.
+Energies are all-electron fixed-geometry CCSD(T) results in the requested finite Gaussian basis. GIAO shieldings use PBE0/cc-pVDZ and a same-method TMS reference. The reported chemical shift convention is `delta = sigma(TMS) - sigma(sample)`. The supplied equilibrium geometries are not optimized; solvent, temperature, rovibrational averaging, and experimental calibration corrections are absent.
 
-Any periodic-table formula is accepted. An optional XYZ provides atom ordering; its coordinates are not imposed as a target geometry:
+## Compute and animate a reactive path
 
 ```bash
-python -m molecular_dirac_sim.formation_demo C2H6O --xyz ethanol.xyz --temperature-k 300 --device cuda
+quantum-atoms scan water --points 17 --r-min 0.78 --r-max 6 --grid-size 40 --basis cc-pVDZ --out results
+quantum-atoms wavepacket results/water_cc-pVDZ_casscf_path.npz --collision-k 1000 --initial-r 4.8 --frames 45 --out results/water_electron_cloud.mp4
 ```
 
-For custom nuclear charges or ions, use the GUI's **Per-atom proton counts** entry and set the electron count separately. This supports non-neutral systems and proton counts outside the periodic table, subject to grid-basis and compute limits.
+For methane use `scan methane` and the resulting `methane_cc-pVDZ_casscf_path.npz`. The water path uses a CAS(8e,6o) average over three singlet roots; methane uses CAS(8e,8o) over four singlet roots. These are valence active spaces in cc-pVDZ; the remaining electrons are represented in inactive orbitals. The 1D nuclear coordinate preserves H permutation symmetry and fixes the molecule's shape to its symmetric path. The nuclear Hamiltonian uses a finite-difference kinetic operator, interpolated CASSCF potential, Gaussian incoming packet, and complex absorbing boundaries. The output JSON reports transient probability and surviving packet norm. `stable_product_probability` is intentionally null because no radiative stabilization is implemented.
 
-Temperature and numerical controls:
+The electron-density movie is not a classical particle animation. Its frames are the probability-weighted, computed CASSCF electron density, in a fixed spatial slice and scale; a video file cannot show the full 3D field at once. Current example runs and reference outputs are in `results/`.
 
-```bash
-python -m molecular_dirac_sim.formation_demo H2O --temperature-k 300 --ramp-to-k 1200 --ramp-steps 5000 --dt-au 1e-7 --grid-size 24 --spacing-bohr 0.35 --norm-bound 1e-8 --overlap-bound 1e-7 --poisson-bound 1e-6
-```
+## Physics boundaries
 
-The default grid is small for CPU smoke tests; the device default is CUDA. Storage scales as `N_e × 4 × Nx × Ny × Nz` complex values, plus Coulomb field work. Larger molecules require more compute and memory.
-
-## Equation and numerical method
-
-For each occupied electron spinor in atomic units:
-
-`i ∂t ψ_i = [c α·(p + A) + β c² + V_nuc + V_H] ψ_i + K[ψ] ψ_i`
-
-`(K[ψ] ψ_i)(r) = -Σ_j ψ_j(r) ∫ ψ_j†(r') ψ_i(r') / |r-r'| dr'`
-
-`V_H` is generated by the total occupied-spinor density. The nonlocal Fock operator `K` includes exchange among all occupied spinors, including the diagonal term that cancels Hartree self-interaction. The electrostatic/free-Dirac split is `exp(-i V dt/2) exp(-i H_free dt) exp(-i V dt/2)`; the Fock contribution uses an iterative Cayley solve. The free Dirac exponential is evaluated analytically using `H_free² = c² p² + c⁴`. The propagator API accepts a spatially uniform vector potential. The molecular runner currently evolves electrostatics, not the full Maxwell field.
-
-## Demo screenshots
-
-The PNGs under `examples/` show the simulated initial, intermediate, and final nuclear configurations alongside electron count, temperature, backend, and numerical monitors.
+No GPU acceleration is implemented in this PySCF route. It currently includes neither multiple spin manifolds/spin-orbit or nonadiabatic couplings, multidimensional nuclear scattering, threshold-resolved three-body rates, radiative dipole transition surfaces, photon modes, resonances, detailed balance, a hot-water rovibrational cascade, nor explicit relativistic/QED corrections. A CASSCF path and a transient packet reaching the well do not establish stable chemical formation. `CCSD(T)` is a high-quality single-reference correlation method, not a QED calculation; its suitability is geometry-dependent (the reported T1 diagnostic should be checked).

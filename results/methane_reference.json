@@ -1,0 +1,83 @@
+{
+  "electronic_structure": {
+    "method": "ccsd(t)",
+    "basis": "cc-pVTZ",
+    "charge": 0,
+    "spin": 0,
+    "n_electrons": 10,
+    "n_basis": 86,
+    "e_scf_hartree": -40.21340240493176,
+    "e_corr_hartree": -0.23526171023291287,
+    "e_total_hartree": -40.45509827302329,
+    "wall_seconds": 5.441437737999877,
+    "converged": true,
+    "diagnostics": {
+      "ccsd_converged": true,
+      "triples_hartree": -0.006434157858616613,
+      "t1_diagnostic": 0.021274954412434266,
+      "frozen_core_orbitals": 0
+    }
+  },
+  "geometry_angstrom": [
+    [
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.6275797426091232,
+      0.6275797426091232,
+      0.6275797426091232
+    ],
+    [
+      0.6275797426091232,
+      -0.6275797426091232,
+      -0.6275797426091232
+    ],
+    [
+      -0.6275797426091232,
+      0.6275797426091232,
+      -0.6275797426091232
+    ],
+    [
+      -0.6275797426091232,
+      -0.6275797426091232,
+      0.6275797426091232
+    ]
+  ],
+  "runtime_total_seconds": 5.521242053000606,
+  "nmr": {
+    "molecule": "methane",
+    "method": "PBE0/cc-pVDZ GIAO SCF response",
+    "phase": "isolated gas-phase equilibrium geometry; no solvent/thermal average",
+    "proton_absolute_shielding_ppm": 31.429994140889477,
+    "tms_proton_reference_shielding_ppm": 31.524193761350244,
+    "proton_chemical_shift_vs_tms_ppm": 0.09419962046076691,
+    "all_atom_isotropic_shieldings_ppm": [
+      202.8058833079675,
+      31.429994140889466,
+      31.429994140889644,
+      31.42999414088942,
+      31.42999414088938
+    ],
+    "reference_isotropic_shieldings_ppm": [
+      425.8065325037391,
+      196.66751536483412,
+      31.55325548390694,
+      31.583761872354618,
+      31.43556392778862,
+      196.6675153648802,
+      31.553255483908103,
+      31.435563927793158,
+      31.583761872357254,
+      196.66751536478296,
+      31.5532554839032,
+      31.435563927786898,
+      31.583761872350777,
+      196.66751536485154,
+      31.553255483907417,
+      31.583761872354803,
+      31.435563927791094
+    ]
+  }
+}

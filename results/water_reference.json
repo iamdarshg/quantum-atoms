@@ -1,0 +1,71 @@
+{
+  "electronic_structure": {
+    "method": "ccsd(t)",
+    "basis": "cc-pVTZ",
+    "charge": 0,
+    "spin": 0,
+    "n_electrons": 10,
+    "n_basis": 58,
+    "e_scf_hartree": -76.05716851487989,
+    "e_corr_hartree": -0.28082896157335513,
+    "e_total_hartree": -76.34576692444195,
+    "wall_seconds": 2.533827430999736,
+    "converged": true,
+    "diagnostics": {
+      "ccsd_converged": true,
+      "triples_hartree": -0.007769447988711289,
+      "t1_diagnostic": 0.01824451448000603,
+      "frozen_core_orbitals": 0
+    }
+  },
+  "geometry_angstrom": [
+    [
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.7569503272636612,
+      0.585882276618295,
+      0.0
+    ],
+    [
+      -0.7569503272636612,
+      0.585882276618295,
+      0.0
+    ]
+  ],
+  "runtime_total_seconds": 2.6078323970014026,
+  "nmr": {
+    "molecule": "water",
+    "method": "PBE0/cc-pVDZ GIAO SCF response",
+    "phase": "isolated gas-phase equilibrium geometry; no solvent/thermal average",
+    "proton_absolute_shielding_ppm": 31.849506739812846,
+    "tms_proton_reference_shielding_ppm": 31.52419376135025,
+    "proton_chemical_shift_vs_tms_ppm": -0.32531297846259477,
+    "all_atom_isotropic_shieldings_ppm": [
+      346.34341537984574,
+      31.8495067398129,
+      31.849506739812796
+    ],
+    "reference_isotropic_shieldings_ppm": [
+      425.80653250375207,
+      196.66751536483062,
+      31.553255483903015,
+      31.58376187235562,
+      31.4355639277879,
+      196.66751536487754,
+      31.553255483909098,
+      31.43556392779385,
+      31.583761872355026,
+      196.66751536478992,
+      31.55325548390327,
+      31.435563927787026,
+      31.583761872352465,
+      196.66751536486504,
+      31.55325548390798,
+      31.58376187235574,
+      31.435563927791975
+    ]
+  }
+}
