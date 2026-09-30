@@ -120,7 +120,7 @@ with st.expander("Model assumptions and interpreting results"):
     st.markdown("""
     - One four-component Dirac spinor is propagated for each electron. Atom count, proton number per atom, and electron count are separate inputs.
     - The electron interaction includes a direct Coulomb Hartree field and four-component nonlocal Fock exchange, applied with an iterative Cayley substep. This is time-dependent Dirac-Hartree-Fock (TD-DHF), not a correlated method.
-    - MP2/MP3/MP4 correlation, radiative self-energy diagrams, vacuum-polarization diagrams, and a photon field are not implemented. No fourth-order QED claim is made; these require a specified renormalized QED formulation and substantially more machinery than the current real-space prototype.
+    - MP2/MP3/MP4 correlation, radiative self-energy diagrams, vacuum-polarization diagrams, and a photon field are not implemented. There is no no-pair projection or renormalized Dirac-sea treatment. No fourth-order QED claim is made; these require a specified renormalized QED formulation and substantially more machinery than the current real-space prototype.
     - Nuclei are classical Ehrenfest particles with approximate masses. Temperature rescales nuclear kinetic energy; it is not an electronic thermal occupation model.
     - The initial atom positions have equal distance from the origin and use a maximin spherical layout. Finite grid and periodic Poisson solve introduce finite-size errors.
     - The displayed tolerances monitor norm, orthogonality, and Poisson residual. They are not guarantees of physical accuracy. Repeat with finer grids and smaller time steps to assess convergence.
