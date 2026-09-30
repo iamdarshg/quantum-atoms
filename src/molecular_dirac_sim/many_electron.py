@@ -69,8 +69,8 @@ def _orthonormalize(states: np.ndarray, dv: float) -> np.ndarray:
     return np.asarray(result)
 
 
-class MolecularDiracHartree:
-    """Many-electron 3-D Dirac spinor dynamics with direct Coulomb mean field.
+class MolecularDiracHartreeFock:
+    """Many-electron 3-D Dirac spinor dynamics with direct and Fock fields.
 
     ``elements`` lists atom labels; ``proton_numbers`` and ``electron_count``
     may be supplied independently for ions or custom nuclear charges.
@@ -296,3 +296,7 @@ class MolecularDiracHartree:
 
     def norm(self):
         return float(np.sum(np.abs(self._to_numpy(self.psi))**2)*self.grid.spacing_bohr**3)
+
+
+# Compatibility alias for the prototype's original public class name.
+MolecularDiracHartree = MolecularDiracHartreeFock

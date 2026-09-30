@@ -9,7 +9,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from .dirac import DiracGrid, parse_formula, Z
-from .many_electron import ErrorBounds, MolecularDiracHartree
+from .many_electron import ErrorBounds, MolecularDiracHartreeFock
 
 st.set_page_config(page_title="Molecular Dirac Lab", page_icon="⚛️", layout="wide")
 st.markdown("""
@@ -77,7 +77,7 @@ if run:
     try:
         grid=DiracGrid((grid_size,)*3,spacing,backend)
         bounds=ErrorBounds(dt,norm_tol,overlap_tol,poisson_tol,spacing)
-        sim=MolecularDiracHartree(atom_symbols,grid,bounds,t0,t1,int(ramp_steps),radius_bohr=radius,
+        sim=MolecularDiracHartreeFock(atom_symbols,grid,bounds,t0,t1,int(ramp_steps),radius_bohr=radius,
                                   proton_numbers=protons,electron_count=int(electrons),
                                   exchange_iterations=exchange_iterations)
         progress=st.progress(0,text="Building occupied spinors and initial fields…")
